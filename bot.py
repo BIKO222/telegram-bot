@@ -1,37 +1,27 @@
 # bot.py
 
-import logging
-from aiogram import Bot, Dispatcher, types
+import asyncio
+from aiogram import Bot, Dispatcher
 from aiogram.types import Message
-from aiogram.utils import executor
+from aiogram.enums import ParseMode
+from aiogram.fsm.storage.memory import MemoryStorage
 import os
-from dotenv import load_dotenv
 
-load_dotenv()
+TOKEN = os.getenv("BOT_TOKEN")  # Убедись, что переменная окружения задана
 
-API_TOKEN = os.getenv("BOT_TOKEN")
+bot = Bot(token=TOKEN, parse_mode=ParseMode.HTML)
+dp = Dispatcher(storage=MemoryStorage())
 
-logging.basicConfig(level=logging.INFO)
+@dp.message(commands=["start"])
+async def start_cmd(message: Message):
+    await message.answer("Привет! Я бот 🤖")
 
-bot = Bot(token=API_TOKEN)
-dp = Dispatcher(bot)
+@dp.message(commands=["resume"])
+async def resume_cmd(message: Message):
+    await message.answer("📄 Резюме Бейбарыса: https://biko222.github.io/Beibarys/")
 
-@dp.message_handler(commands=["start", "help"])
-async def send_welcome(message: Message):
-    await message.reply("Привет! Напиши /resume чтобы посмотреть резюме Бейбарыса.")
-
-@dp.message_handler(commands=["resume"])
-async def send_resume(message: Message):
-    text = (
-        "📄 Резюме Бейбарыса\n"
-        "🌐 Сайт: https://biko222.github.io/Beibarys/\n\n"
-        "💡 Кратко:\n"
-        "— Ученик 8 класса\n"
-        "— Интересуется искусственным интеллектом\n"
-        "— Участвует в олимпиадах по информатике и математике\n"
-        "— Создаёт сайты и изучает Python/Django\n"
-    )
-    await message.reply(text)
+async def main():
+    await dp.start_polling(bot)
 
 if __name__ == "__main__":
-    executor.start_polling(dp, skip_updates=True)
+    asyncio.run(main())

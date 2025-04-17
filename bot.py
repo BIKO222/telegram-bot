@@ -1,24 +1,32 @@
-# bot.py
-
-import asyncio
 from aiogram import Bot, Dispatcher
 from aiogram.types import Message
-from aiogram.enums import ParseMode
-from aiogram.fsm.storage.memory import MemoryStorage
-import os
+from aiogram.filters import Command
+import asyncio
 
-TOKEN = os.getenv("BOT_TOKEN")  # Убедись, что переменная окружения задана
+TOKEN = '7044056826:AAEKMk8i2Q7SdpRBCQTqGvGGqPwTgQcjboA'
 
-bot = Bot(token=TOKEN, parse_mode=ParseMode.HTML)
-dp = Dispatcher(storage=MemoryStorage())
+# Создание бота
+bot = Bot(token=TOKEN)
+dp = Dispatcher(bot=bot)  # Pass bot as a keyword argument
 
-@dp.message(commands=["start"])
+# Команда /start
+@dp.message(Command("start"))
 async def start_cmd(message: Message):
-    await message.answer("Привет! Я бот 🤖")
+    await message.answer(
+        "Привет! Я бот 🤖\n\n"
+        "Я могу помочь тебе с информацией о твоём резюме, проекте и многом другом.\n"
+        "Вот мои доступные команды:\n\n"
+        "/start — Приветственное сообщение\n"
+        "/resume — Посмотреть резюме\n"
+        "/contact — Контактная информация\n"
+        "/projects — Мои проекты\n",
+        parse_mode="HTML"  # Specify parse_mode directly when sending messages
+    )
 
-@dp.message(commands=["resume"])
+# Команда /resume
+@dp.message(Command("resume"))
 async def resume_cmd(message: Message):
-    await message.answer("📄 Резюме Бейбарыса: https://biko222.github.io/Beibarys/")
+    await message.answer("📄 Резюме Бейбарыса: https://biko222.github.io/Beibarys/", parse_mode="HTML")
 
 async def main():
     await dp.start_polling(bot)

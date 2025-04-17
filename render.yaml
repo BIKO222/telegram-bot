@@ -1,10 +1,10 @@
 services:
   - type: web
-    name: telegram-resume-bot
+    name: telegram-bot
     env: python
     plan: free
-    buildCommand: ""
+    buildCommand: pip install -r requirements.txt
     startCommand: python bot.py
     envVars:
-      - key: BOT_TOKEN
-        sync: false
+      - key: TOKEN
+        fromService: your_service_name

@@ -1,2 +1,2 @@
-aiogram==2.25.1
+pip install aiogram==3.3.0 
 python-dotenv
